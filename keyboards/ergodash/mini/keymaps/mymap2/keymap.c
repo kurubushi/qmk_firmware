@@ -3,9 +3,9 @@
 extern keymap_config_t keymap_config;
 
 #define _QWERTY 0
-#define _LOWER 1
-#define _RAISE 2
-#define _DVORAK 3
+#define _DVORAK 1
+#define _LOWER 2
+#define _RAISE 3
 #define _ADJUST 16
 
 enum custom_keycodes {
@@ -40,21 +40,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Dvorak
    * ,----------------------------------------------------------------------------------------------------------------------.
-   * |      |   '  |   ,  |   .  |   P  |   Y  |      |                    |      |   F  |   G  |   C  |   R  |   L  |  /   |
+   * |  Tab |   '  |   ,  |   .  |   P  |   Y  |DVORAK|                    |  Del |   F  |   G  |   C  |   R  |   L  |  /   |
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
-   * |      |   A  |   O  |   E  |   U  |   I  |      |                    |      |   D  |   H  |   T  |   N  |   S  |  -   |
+   * | Ctrl |   A  |   O  |   E  |   U  |   I  |  Esc |                    |   X  |   D  |   H  |   T  |   N  |   S  |  -   |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
-   * |      |   ;  |   Q  |   J  |   K  |   X  |      |                    |      |   B  |   M  |   W  |   V  |   Z  |      |
+   * | Shift|   ;  |   Q  |   J  |   K  |   X  |      |                    |      |   B  |   M  |   W  |   V  |   Z  | Shift|
    * |-------------+------+------+------+------+------+------+------+------+------+------+------+------+------+-------------|
-   * |      |      |      ||||||||      |      |      |      ||||||||      |      |      |      ||||||||      |      |      |
+   * | Esc  |  GUI |  Alt ||||||||  GUI | Lower| Space|      ||||||||      | Enter| Raise| Bksp ||||||||      |  ALt | Ctrl |
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_DVORAK] = LAYOUT( \
-    _______, KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    _______,                         _______, KC_F,    KC_G,    KC_C,    KC_R, KC_L,    KC_SLSH, \
-    _______, KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    _______,                         KC_X,    KC_D,    KC_H,    KC_T,    KC_N, KC_S,    KC_MINUS, \
-    _______, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    _______,                         _______, KC_N,    KC_M,    KC_W,    KC_V, KC_Z,    _______, \
-    _______, _______, _______,          _______, _______, _______, _______,       _______, _______, _______, _______,          _______, _______, _______ \
-  ),
+    KC_TAB , KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,  DVORAK,                           KC_DEL,  KC_F,  KC_G,    KC_C, KC_R,    KC_L,    KC_SLSH, \
+    KC_LCTL, KC_A,    KC_O,    KC_E,    KC_U,    KC_I,  KC_ESC,                           KC_X,    KC_D,  KC_H,    KC_T, KC_N,    KC_S,    KC_MINUS, \
+    KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,  XXXXXXX,                          XXXXXXX, KC_B,  KC_M,    KC_W, KC_V,    KC_Z,    KC_RSFT, \
+    KC_ESC , KC_LGUI, KC_LALT,          KC_LGUI, LOWER, KC_SPC,  XXXXXXX,        XXXXXXX, KC_ENT,  RAISE, KC_BSPC,       XXXXXXX, KC_RALT, KC_RCTL \
+),
 
   /* Lower
    * ,----------------------------------------------------------------------------------------------------------------------.
@@ -111,62 +111,48 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
+// is Dvorak mode?
 bool is_dvorak = false;
-
-void layer_on_qd(int layer) {
-  if (is_dvorak) {
-    layer_off(_DVORAK);
-  }
-  return layer_on(layer);
-}
-
-void layer_off_qd(int layer) {
-  layer_off(layer);
-  if (is_dvorak) {
-    layer_on(_DVORAK);
-  }
-  return;
-}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case LOWER:
       if (record->event.pressed) {
-        layer_on_qd(_LOWER);
+        layer_on(_LOWER);
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
-        layer_off_qd(_LOWER);
+        layer_off(_LOWER);
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
       return false;
       break;
     case RAISE:
       if (record->event.pressed) {
-        layer_on_qd(_RAISE);
+        layer_on(_RAISE);
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
-        layer_off_qd(_RAISE);
+        layer_off(_RAISE);
         update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
       return false;
       break;
     case ADJUST:
       if (record->event.pressed) {
-        layer_on_qd(_ADJUST);
+        layer_on(_ADJUST);
       } else {
-        layer_off_qd(_ADJUST);
+        layer_off(_ADJUST);
       }
       return false;
       break;
     case DVORAK:
       if (record->event.pressed) {
         if (is_dvorak) {
-            is_dvorak = false;
-            layer_off_qd(_DVORAK);
+          is_dvorak = false;
+          default_layer_set(1UL << _QWERTY);
         }
         else {
-            is_dvorak = true;
-            layer_on_qd(_DVORAK);
+          is_dvorak = true;
+          default_layer_set(1UL << _DVORAK);
         }
       }
       return false;
