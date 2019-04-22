@@ -14,7 +14,16 @@ enum custom_keycodes {
   RAISE,
   DVORAK,
   ADJUST,
+  INIT,
 };
+
+// type of EEPROM
+typedef union {
+  uint32_t data;
+  struct {
+    bool is_dvorak_mode :1;
+  };
+} eeprom_user_t;
 
 #define EISU LALT(KC_GRV)
 
@@ -94,7 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Adjust
    * ,----------------------------------------------------------------------------------------------------------------------.
-   * |      | Reset|RGB ON|  MODE|  HUE-|  HUE+|      |                    |      |  SAT-|  SAT+|  VAL-|  VAL+|      |      |
+   * |      | Reset|RGB ON|  MODE|  HUE-|  HUE+|  INIT|                    |      |  SAT-|  SAT+|  VAL-|  VAL+|      |      |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
    * |      |      |      |      |      |      |      |                    |      |      |      |      |      |      |      |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
@@ -104,18 +113,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_ADJUST] = LAYOUT(
-    _______, RESET  , RGB_TOG, RGB_MOD, RGB_HUD, RGB_HUI,_______,                       _______, RGB_SAD, RGB_SAI, RGB_VAD, RGB_VAI, _______, _______, \
+    _______, RESET  , RGB_TOG, RGB_MOD, RGB_HUD, RGB_HUI,INIT,                       _______, RGB_SAD, RGB_SAI, RGB_VAD, RGB_VAI, _______, _______, \
     _______, _______, BL_TOGG, BL_BRTG, BL_INC , BL_DEC ,_______,                       _______, _______, _______, _______, _______, _______, _______, \
     _______, _______, _______, _______, _______, _______,_______,                       _______, _______, _______, _______, _______, _______, _______, \
     _______, _______, _______, _______,          _______,_______,_______,       _______,_______, _______,          _______, _______, _______, _______  \
   )
 };
 
-// is Dvorak mode?
-bool is_dvorak = false;
+
+bool is_dvorak_mode(void) {
+  eeprom_user_t eeprom_user;
+  eeprom_user.data = eeconfig_read_user();
+  return eeprom_user.is_dvorak_mode;
+}
+void set_dvorak_mode(bool b) {
+  eeprom_user_t eeprom_user;
+  eeprom_user.data = eeconfig_read_user();
+  eeprom_user.is_dvorak_mode = b;
+  return eeconfig_update_user(eeprom_user.data);
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+    case INIT:
+      if (record->event.pressed) {
+        eeconfig_init(); // reset EEPROM
+        set_dvorak_mode(false);
+      }
+      return false;
+      break;
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
@@ -146,13 +172,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     case DVORAK:
       if (record->event.pressed) {
-        if (is_dvorak) {
-          is_dvorak = false;
-          default_layer_set(1UL << _QWERTY);
+        if (is_dvorak_mode()) {
+          set_dvorak_mode(false);
+          // default_layer_set(1UL<<_QWERTY);
+          set_single_persistent_default_layer(_QWERTY);
         }
         else {
-          is_dvorak = true;
-          default_layer_set(1UL << _DVORAK);
+          set_dvorak_mode(true);
+          // default_layer_set(1UL<<_DVORAK);
+          set_single_persistent_default_layer(_DVORAK);
         }
       }
       return false;
