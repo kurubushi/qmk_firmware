@@ -5,12 +5,14 @@ extern keymap_config_t keymap_config;
 #define _QWERTY 0
 #define _LOWER 1
 #define _RAISE 2
+#define _DVORAK 3
 #define _ADJUST 16
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
   RAISE,
+  DVORAK,
   ADJUST,
 };
 
@@ -20,7 +22,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Qwerty
    * ,----------------------------------------------------------------------------------------------------------------------.
-   * |  Tab |   Q  |   W  |   E  |   R  |   T  |  Esc |                    |  Del |   Y  |   U  |   I  |   O  |   P  |  -   |
+   * |  Tab |   Q  |   W  |   E  |   R  |   T  |DVORAK|                    |  Del |   Y  |   U  |   I  |   O  |   P  |  -   |
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
    * | Ctrl |   A  |   S  |   D  |   F  |   G  |  Esc |                    |   B  |   H  |   J  |   K  |   L  |   ;  |  "   |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
@@ -30,10 +32,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_QWERTY] = LAYOUT( \
-    KC_TAB , KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_ESC,                           KC_DEL,  KC_Y,  KC_U,    KC_I,    KC_O,    KC_P,    KC_MINUS, \
+    KC_TAB , KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  DVORAK,                           KC_DEL,  KC_Y,  KC_U,    KC_I,    KC_O,    KC_P,    KC_MINUS, \
     KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_ESC,                           KC_B,    KC_H,  KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  XXXXXXX,                          XXXXXXX, KC_N,  KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, \
     KC_ESC , KC_LGUI, KC_LALT,          KC_LGUI, LOWER, KC_SPC,  XXXXXXX,        XXXXXXX, KC_ENT,  RAISE, KC_BSPC,          XXXXXXX, KC_RALT, KC_RCTL \
+  ),
+
+  /* Dvorak
+   * ,----------------------------------------------------------------------------------------------------------------------.
+   * |  Tab |   '  |   ,  |   .  |   P  |   Y  |DVORAK|                    |  Del |   F  |   G  |   C  |   R  |   L  |  /   |
+   * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
+   * | Ctrl |   A  |   O  |   E  |   U  |   I  |  Esc |                    |   X  |   D  |   H  |   T  |   N  |   S  |  -   |
+   * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
+   * | Shift|   ;  |   Q  |   J  |   K  |   X  |      |                    |      |   B  |   M  |   W  |   V  |   Z  | Shift|
+   * |-------------+------+------+------+------+------+------+------+------+------+------+------+------+------+-------------|
+   * | Esc  |  GUI |  Alt ||||||||  GUI | Lower| Space|      ||||||||      | Enter| Raise| Bksp ||||||||      |  ALt | Ctrl |
+   * ,----------------------------------------------------------------------------------------------------------------------.
+   */
+  [_DVORAK] = LAYOUT( \
+    KC_TAB , KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,  DVORAK,                           KC_DEL,  KC_F,  KC_G,    KC_C, KC_R,    KC_L,    KC_SLSH, \
+    KC_LCTL, KC_A,    KC_O,    KC_E,    KC_U,    KC_I,  KC_ESC,                           KC_X,    KC_D,  KC_H,    KC_T, KC_N,    KC_S,    KC_MINUS, \
+    KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,  XXXXXXX,                          XXXXXXX, KC_B,  KC_M,    KC_W, KC_V,    KC_Z,    KC_RSFT, \
+    KC_ESC , KC_LGUI, KC_LALT,          KC_LGUI, LOWER, KC_SPC,  XXXXXXX,        XXXXXXX, KC_ENT,  RAISE, KC_BSPC,       XXXXXXX, KC_RALT, KC_RCTL \
   ),
 
   /* Lower
@@ -91,6 +111,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
+bool is_dvorak = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case LOWER:
@@ -118,6 +140,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_on(_ADJUST);
       } else {
         layer_off(_ADJUST);
+      }
+      return false;
+      break;
+    case DVORAK:
+      if (record->event.pressed) {
+        if (is_dvorak) {
+            is_dvorak = false;
+            layer_off(_DVORAK);
+        }
+        else {
+            is_dvorak = true;
+            layer_on(_DVORAK);
+        }
       }
       return false;
       break;
