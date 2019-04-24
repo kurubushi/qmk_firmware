@@ -13,17 +13,10 @@ enum custom_keycodes {
   LOWER,
   RAISE,
   DVORAK,
+  PDVORAK,
   ADJUST,
   INIT,
 };
-
-// type of EEPROM
-typedef union {
-  uint32_t data;
-  struct {
-    bool is_dvorak_mode :1;
-  };
-} eeprom_user_t;
 
 #define EISU LALT(KC_GRV)
 
@@ -103,9 +96,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Adjust
    * ,----------------------------------------------------------------------------------------------------------------------.
-   * |      | Reset|RGB ON|  MODE|  HUE-|  HUE+|  INIT|                    |      |  SAT-|  SAT+|  VAL-|  VAL+|      |      |
+   * |      | Reset|RGB ON|  MODE|  HUE-|  HUE+|PDVRAK|                   |      |  SAT-|  SAT+|  VAL-|  VAL+|      |      |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
-   * |      |      |      |      |      |      |      |                    |      |      |      |      |      |      |      |
+   * |      |      |      |      |      |      |      |                    |      | INIT |      |      |      |      |      |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
    * |      |      |      |      |      |      |      |                    |      |      |      |      |      |      |      |
    * |-------------+------+------+------+------+------+------+------+------+------+------+------+------+------+-------------|
@@ -113,24 +106,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_ADJUST] = LAYOUT(
-    _______, RESET  , RGB_TOG, RGB_MOD, RGB_HUD, RGB_HUI,INIT,                       _______, RGB_SAD, RGB_SAI, RGB_VAD, RGB_VAI, _______, _______, \
-    _______, _______, BL_TOGG, BL_BRTG, BL_INC , BL_DEC ,_______,                       _______, _______, _______, _______, _______, _______, _______, \
+    _______, RESET  , RGB_TOG, RGB_MOD, RGB_HUD, RGB_HUI,PDVORAK,                    _______, RGB_SAD, RGB_SAI, RGB_VAD, RGB_VAI, _______, _______, \
+    _______, _______, BL_TOGG, BL_BRTG, BL_INC , BL_DEC ,INIT,                          _______, _______, _______, _______, _______, _______, _______, \
     _______, _______, _______, _______, _______, _______,_______,                       _______, _______, _______, _______, _______, _______, _______, \
     _______, _______, _______, _______,          _______,_______,_______,       _______,_______, _______,          _______, _______, _______, _______  \
   )
 };
 
 
-bool is_dvorak_mode(void) {
-  eeprom_user_t eeprom_user;
-  eeprom_user.data = eeconfig_read_user();
-  return eeprom_user.is_dvorak_mode;
+uint8_t get_default_layer(void) {
+  return biton32(default_layer_state);
 }
-void set_dvorak_mode(bool b) {
-  eeprom_user_t eeprom_user;
-  eeprom_user.data = eeconfig_read_user();
-  eeprom_user.is_dvorak_mode = b;
-  return eeconfig_update_user(eeprom_user.data);
+
+uint8_t get_layer(void) {
+  return biton32(layer_state);
+}
+
+bool is_dvorak_mode(void) {
+  return get_default_layer() == _DVORAK;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -138,7 +131,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case INIT:
       if (record->event.pressed) {
         eeconfig_init(); // reset EEPROM
-        set_dvorak_mode(false);
       }
       return false;
       break;
@@ -173,13 +165,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case DVORAK:
       if (record->event.pressed) {
         if (is_dvorak_mode()) {
-          set_dvorak_mode(false);
-          // default_layer_set(1UL<<_QWERTY);
+          default_layer_set(1UL<<_QWERTY);
+        }
+        else {
+          default_layer_set(1UL<<_DVORAK);
+        }
+      }
+      return false;
+      break;
+    case PDVORAK: // persistent switching
+      if (record->event.pressed) {
+        if (is_dvorak_mode()) {
           set_single_persistent_default_layer(_QWERTY);
         }
         else {
-          set_dvorak_mode(true);
-          // default_layer_set(1UL<<_DVORAK);
           set_single_persistent_default_layer(_DVORAK);
         }
       }
