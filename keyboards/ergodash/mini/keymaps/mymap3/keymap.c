@@ -19,6 +19,8 @@ enum custom_keycodes {
 };
 
 #define EISU LALT(KC_GRV)
+#define SANDS SFT_T(KC_SPC)
+#define ZENHAN KC_LANG6
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -30,14 +32,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
    * | Shift|   Z  |   X  |   C  |   V  |   B  |      |                    |      |   N  |   M  |   ,  |   .  |   /  | Shift|
    * |-------------+------+------+------+------+------+------+------+------+------+------+------+------+------+-------------|
-   * | Esc  |  GUI |  Alt ||||||||  GUI | Lower| Space|      ||||||||      | Enter| Raise| Bksp ||||||||      |  ALt | Ctrl |
+   * | Esc  |  GUI |  Alt |||||||| Shift| Lower| Space|      ||||||||      | Enter| Raise| Bksp ||||||||      |  ALt | Ctrl |
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_QWERTY] = LAYOUT( \
     KC_TAB ,KC_Q   ,KC_W   ,KC_E,KC_R   ,KC_T ,DVORAK ,                    KC_DEL ,KC_Y ,KC_U   ,KC_I,   KC_O   ,KC_P   ,KC_MINUS, \
     KC_LCTL,KC_A   ,KC_S   ,KC_D,KC_F   ,KC_G ,KC_ESC ,                    KC_B   ,KC_H ,KC_J   ,KC_K,   KC_L   ,KC_SCLN,KC_QUOT , \
     KC_LSFT,KC_Z   ,KC_X   ,KC_C,KC_V   ,KC_B ,XXXXXXX,                    XXXXXXX,KC_N ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,KC_RSFT , \
-    KC_ESC ,KC_LGUI,KC_LALT,     KC_LGUI,LOWER,KC_SPC ,XXXXXXX,    XXXXXXX,KC_ENT ,RAISE,KC_BSPC,        XXXXXXX,KC_RALT,KC_RCTL   \
+    KC_ESC ,KC_LGUI,KC_LALT,     KC_LSFT,LOWER,KC_SPC ,XXXXXXX,    XXXXXXX,KC_ENT ,RAISE,KC_BSPC,        XXXXXXX,KC_RALT,KC_RCTL   \
   ),
 
   /* Dvorak
@@ -48,14 +50,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
    * | Shift|   ;  |   Q  |   J  |   K  |   X  |      |                    |      |   B  |   M  |   W  |   V  |   Z  | Shift|
    * |-------------+------+------+------+------+------+------+------+------+------+------+------+------+------+-------------|
-   * | Esc  |  GUI |  Alt ||||||||  GUI | Lower| Space|      ||||||||      | Enter| Raise| Bksp ||||||||      |  ALt | Ctrl |
+   * | Esc  |  GUI |  Alt |||||||| Shift| Lower| Space|      ||||||||      | Enter| Raise| Bksp ||||||||      |  ALt | Ctrl |
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_DVORAK] = LAYOUT( \
     KC_TAB ,KC_QUOT,KC_COMM,KC_DOT,KC_P   ,KC_Y ,DVORAK ,                     KC_DEL ,KC_F ,KC_G   ,KC_C,KC_R   ,KC_L   ,KC_SLSH , \
     KC_LCTL,KC_A   ,KC_O   ,KC_E  ,KC_U   ,KC_I ,KC_ESC ,                     KC_X   ,KC_D ,KC_H   ,KC_T,KC_N   ,KC_S   ,KC_MINUS, \
     KC_LSFT,KC_SCLN,KC_Q   ,KC_J  ,KC_K   ,KC_X ,XXXXXXX,                     XXXXXXX,KC_B ,KC_M   ,KC_W,KC_V   ,KC_Z   ,KC_RSFT , \
-    KC_ESC ,KC_LGUI,KC_LALT,       KC_LGUI,LOWER,KC_SPC , XXXXXXX,    XXXXXXX,KC_ENT ,RAISE,KC_BSPC,     XXXXXXX,KC_RALT,KC_RCTL   \
+    KC_ESC ,KC_LGUI,KC_LALT,       KC_LSFT,LOWER,KC_SPC , XXXXXXX,    XXXXXXX,KC_ENT ,RAISE,KC_BSPC,     XXXXXXX,KC_RALT,KC_RCTL   \
 ),
 
   /* Lower
@@ -89,7 +91,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    */
   [_RAISE] = LAYOUT(
     _______,KC_F1  ,KC_F2  ,KC_F3  ,KC_F4   ,KC_F5  ,_______,                     _______,KC_F6,  KC_F7  ,KC_F8  ,KC_F9  ,KC_F10 ,_______, \
-    _______,KC_F11 ,KC_F12 ,_______,KC_LANG6,_______,_______,                     _______,KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,KC_PGUP,KC_INS , \
+    _______,KC_F11 ,KC_F12 ,_______,ZENHAN  ,_______,_______,                     _______,KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,KC_PGUP,KC_INS , \
     _______,_______,_______,_______,_______ ,_______,_______,                     _______,KC_HOME,KC_PGDN,KC_PGDN,KC_END ,KC_PGDN,KC_DEL , \
     _______,_______,_______,        _______ ,_______,_______,_______,    _______, _______,_______, _______,       _______,_______,_______  \
     ),
