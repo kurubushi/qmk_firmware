@@ -69,16 +69,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
    * | Ctrl |   A  |   S  |   D  |   F  |   G  |  Esc |                    | Bksp |   H  |   J  |   K  |   L  |   ;  |  "   |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
-   * |  GUI |   Z  |   X  |   C  |   V  |   B  |      |                    |      |   N  |   M  |   ,  |   .  |   /  |  Alt |
+   * | Shift|   Z  |   X  |   C  |   V  |   B  |      |                    |      |   N  |   M  |   ,  |   .  |   /  |  Alt |
    * |-------------+------+------+------+------+------+------+------+------+------+------+------+------+------+-------------|
-   * |  Esc |  GUI |  Alt |||||||| Super| Lower| Space|      ||||||||      | Enter| Shift| Raise||||||||  Alt | Ctrl | EISU |
+   * |  Esc |  GUI |  Alt |||||||| Shift| Lower| Space|      ||||||||      | Enter| Raise| Bksp ||||||||  Alt | Ctrl | EISU |
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_QWERTY] = LAYOUT( \
     KC_TAB ,KC_Q   ,KC_W   ,KC_E,KC_R   ,KC_T   ,ADJUST ,                  KC_DEL ,KC_Y   ,KC_U   ,KC_I,   KC_O   ,KC_P   ,KC_MINUS, \
     KC_LCTL,KC_A   ,KC_S   ,KC_D,KC_F   ,KC_G   ,KC_ESC ,                  KC_BSPC,KC_H   ,KC_J   ,KC_K,   KC_L   ,KC_SCLN,KC_QUOT , \
     KC_LSFT,KC_Z   ,KC_X   ,KC_C,KC_V   ,KC_B   ,XXXXXXX,                  XXXXXXX,KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,KC_RALT,  \
-    KC_ESC ,KC_LGUI,KC_LALT,     SUPER  ,LOWER  ,KC_SPC ,XXXXXXX,  XXXXXXX,KC_ENT ,KC_LSFT,RAISE  ,        KC_RALT,KC_RCTL,EISU      \
+    KC_ESC ,KC_LGUI,KC_LALT,     KC_LSFT,LOWER  ,KC_SPC ,XXXXXXX,  XXXXXXX,KC_ENT ,RAISE  ,KC_BSPC,        KC_RALT,KC_RCTL,EISU      \
   ), 
 
   /* Dvorak
@@ -87,16 +87,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
    * | Ctrl |   A  |   O  |   E  |   U  |   I  |  Esc |                    | Bksp |   D  |   H  |   T  |   N  |   S  |  -   |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
-   * |  GUI |   ;  |   Q  |   J  |   K  |   X  |      |                    |      |   B  |   M  |   W  |   V  |   Z  |  Alt |
+   * | Shift|   ;  |   Q  |   J  |   K  |   X  |      |                    |      |   B  |   M  |   W  |   V  |   Z  |  Alt |
    * |-------------+------+------+------+------+------+------+------+------+------+------+------+------+------+-------------|
-   * |  Esc |  GUI |  Alt |||||||| Super| Lower| Space|      ||||||||      | Enter| Shift| Raise||||||||  Alt | Ctrl | EISU |
+   * |  Esc |  GUI |  Alt |||||||| Shift| Lower| Space|      ||||||||      | Enter| Raise| Bksp ||||||||  Alt | Ctrl | EISU |
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_DVORAK] = LAYOUT( \
     KC_TAB ,KC_QUOT,KC_COMM,KC_DOT,KC_P   ,KC_Y ,ADJUST ,                  KC_DEL ,KC_F ,KC_G   ,KC_C,KC_R   ,KC_L   ,KC_SLSH , \
     KC_LCTL,KC_A   ,KC_O   ,KC_E  ,KC_U   ,KC_I ,KC_ESC ,                  KC_BSPC,KC_D ,KC_H   ,KC_T,KC_N   ,KC_S   ,KC_MINUS, \
-    KC_LGUI,KC_SCLN,KC_Q   ,KC_J  ,KC_K   ,KC_X ,XXXXXXX,                  XXXXXXX,KC_B ,KC_M   ,KC_W,KC_V   ,KC_Z   ,KC_RALT , \
-    KC_ESC ,KC_LGUI,KC_LALT,     SUPER  ,LOWER  ,KC_SPC ,XXXXXXX,  XXXXXXX,KC_ENT ,KC_LSFT,RAISE  ,        KC_RALT,KC_RCTL,EISU      \
+    KC_LSFT,KC_SCLN,KC_Q   ,KC_J  ,KC_K   ,KC_X ,XXXXXXX,                  XXXXXXX,KC_B ,KC_M   ,KC_W,KC_V   ,KC_Z   ,KC_RALT , \
+    KC_ESC ,KC_LGUI,KC_LALT,     KC_LSFT,LOWER  ,KC_SPC ,XXXXXXX,  XXXXXXX,KC_ENT ,RAISE  ,KC_BSPC,        KC_RALT,KC_RCTL,EISU      \
 ),
 
   /* modified Colemak
@@ -105,16 +105,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |------+------+------+------+------+------+------+--------------------+------+------+------+------+------+------+------|
    * | Ctrl |   A  |   R  |   S  |   T  |   D  |  Esc |                    | Bksp |   H  |   N  |   E  |   I  |   O  |  "   |
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
-   * |  GUI |   Z  |   X  |   C  |   V  |   B  |      |                    |      |   J  |   M  |   ,  |   .  |   /  |  Alt |
+   * | Shift|   Z  |   X  |   C  |   V  |   B  |      |                    |      |   J  |   M  |   ,  |   .  |   /  |  Alt |
    * |-------------+------+------+------+------+------+------+------+------+------+------+------+------+------+-------------|
-   * |  Esc |  GUI |  Alt |||||||| Super| Lower| Space|      ||||||||      | Enter| Shift| Raise||||||||  Alt | Ctrl | EISU |
+   * |  Esc |  GUI |  Alt |||||||| Shift| Lower| Space|      ||||||||      | Enter| Raise| Bksp ||||||||  Alt | Ctrl | EISU |
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_COLEMAK] = LAYOUT( \
     KC_TAB ,KC_Q   ,KC_W   ,KC_F,KC_P   ,KC_G   ,ADJUST ,                  KC_DEL ,KC_K   ,KC_L   ,KC_U,   KC_Y   ,KC_SCLN,KC_MINUS, \
     KC_LCTL,KC_A   ,KC_R   ,KC_S,KC_T   ,KC_D   ,KC_ESC ,                  KC_BSPC,KC_H   ,KC_N   ,KC_E,   KC_I   ,KC_O   ,KC_QUOT , \
-    KC_LGUI,KC_Z   ,KC_X   ,KC_C,KC_V   ,KC_B   ,XXXXXXX,                  XXXXXXX,KC_J   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,KC_RALT,  \
-    KC_ESC ,KC_LGUI,KC_LALT,     SUPER  ,LOWER  ,KC_SPC ,XXXXXXX,  XXXXXXX,KC_ENT ,KC_LSFT,RAISE  ,        KC_RALT,KC_RCTL,EISU      \
+    KC_LSFT,KC_Z   ,KC_X   ,KC_C,KC_V   ,KC_B   ,XXXXXXX,                  XXXXXXX,KC_J   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,KC_RALT,  \
+    KC_ESC ,KC_LGUI,KC_LALT,     KC_LSFT,LOWER  ,KC_SPC ,XXXXXXX,  XXXXXXX,KC_ENT ,RAISE  ,KC_BSPC,        KC_RALT,KC_RCTL,EISU      \
   ), 
 
   /* Lower
@@ -181,11 +181,15 @@ bool is_dvorak_mode(void) {
   return default_layer_state_is(_DVORAK);
 }
 
-bool is_pressed_shift = false;
+typedef struct pressed_memo {
+  bool shift;
+  bool adjust;
+} pressed_memo;
+pressed_memo is_pressed = {false, false};
 
 void auto_switch_layer(void) {
   // turn on ADJUST with
-  if (layer_state_is(_ADJUST) || // ADJUST
+  if (is_pressed.adjust || // ADJUST
       (layer_state_is(_LOWER) && layer_state_is(_RAISE))) // LOWER+RAISE
     layer_on(_ADJUST);
   else // turn off ADJUST
@@ -212,10 +216,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     auto_switch_layer();
     return false;
   case ADJUST:
-    if (record->event.pressed) layer_on(_ADJUST);
-    else layer_off(_ADJUST);
+    if (record->event.pressed) {
+      is_pressed.adjust = true;
+      layer_on(_ADJUST);
+    }
+    else {
+      is_pressed.adjust = false;
+      layer_off(_ADJUST);
+    }
     auto_switch_layer();
-      return false;
+    return false;
   case QWERTY: // turn to QWERTY
     if (record->event.pressed)
       default_layer_set(1UL<<_QWERTY);
@@ -241,8 +251,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       set_single_persistent_default_layer(_COLEMAK);
     return false;
   case KC_LSFT:
-    if (record->event.pressed) is_pressed_shift = true;
-    else is_pressed_shift = false;
+    if (record->event.pressed) is_pressed.shift = true;
+    else is_pressed.shift = false;
     auto_switch_layer();
     return true;
   }
