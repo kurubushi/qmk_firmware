@@ -24,9 +24,60 @@ enum custom_keycodes {
   INIT,
 };
 
+typedef struct pressed_memo {
+  bool shift;
+  bool adjust;
+} pressed_memo;
+pressed_memo is_pressed = {false, false};
+
+
+
+void auto_switch_layer(void) {
+  // turn on ADJUST with
+  if (is_pressed.adjust || // ADJUST
+      (layer_state_is(_LOWER) && layer_state_is(_RAISE))) // LOWER+RAISE
+    layer_on(_ADJUST);
+  else // turn off ADJUST
+    layer_off(_ADJUST);
+
+  return;
+}
+
+
+//Tap Dance Declarations
+void td_raise_mouse_finished (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) { // on single tap => RAISE
+    layer_on(_RAISE);
+  }
+  else { // on double tap => MOUSE
+    layer_on(_MOUSE);
+  }
+  auto_switch_layer();
+  return;
+}
+
+void td_raise_mouse_reset (qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) { // on single tap => RAISE
+    layer_off(_RAISE);
+  }
+  else { // on double tap => MOUSE
+    layer_off(_MOUSE);
+  }
+  auto_switch_layer();
+  return;
+}
+
+enum {
+  TD_RAISE_MOUSE = 0
+};
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [TD_RAISE_MOUSE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_raise_mouse_finished, td_raise_mouse_reset)
+};
+
 #define SUPER KC_LALT
 #define EISU LALT(KC_GRV)
 #define SANDS SFT_T(KC_SPC)
+#define RAISEM TD(TD_RAISE_MOUSE)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -72,14 +123,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |------+------+------+------+------+------+---------------------------+------+------+------+------+------+------+------|
    * | Shift|   Z  |   X  |   C  |   V  |   B  |      |                    |      |   N  |   M  |   ,  |   .  |   /  |  Alt |
    * |-------------+------+------+------+------+------+------+------+------+------+------+------+------+------+-------------|
-   * |  Esc |  GUI |  Alt ||||||||  GUI | Lower| Space|      ||||||||      | Enter| Raise| Mouse||||||||  Alt | Ctrl | EISU |
+   * |  Esc |  GUI |  Alt ||||||||  GUI | Lower| Space|      ||||||||      | Enter|RaiseM| Bksp ||||||||  Alt | Ctrl | EISU |
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_QWERTY] = LAYOUT( \
     KC_TAB ,KC_Q   ,KC_W   ,KC_E,KC_R   ,KC_T   ,ADJUST ,                  KC_DEL ,KC_Y   ,KC_U   ,KC_I,   KC_O   ,KC_P   ,KC_MINUS, \
     KC_LCTL,KC_A   ,KC_S   ,KC_D,KC_F   ,KC_G   ,KC_ESC ,                  KC_BSPC,KC_H   ,KC_J   ,KC_K,   KC_L   ,KC_SCLN,KC_QUOT , \
     KC_LSFT,KC_Z   ,KC_X   ,KC_C,KC_V   ,KC_B   ,XXXXXXX,                  XXXXXXX,KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,KC_RALT,  \
-    KC_ESC ,KC_LGUI,KC_LALT,     KC_RGUI,LOWER  ,KC_SPC ,XXXXXXX,  XXXXXXX,KC_ENT ,RAISE  ,MOUSE  ,        KC_RALT,KC_RCTL,EISU      \
+    KC_ESC ,KC_LGUI,KC_LALT,     KC_RGUI,LOWER  ,KC_SPC ,XXXXXXX,  XXXXXXX,KC_ENT ,RAISEM ,KC_BSPC,        KC_RALT,KC_RCTL,EISU      \
   ), 
 
   /* Dvorak
@@ -192,29 +243,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
+
 bool default_layer_state_is(uint8_t layer) {
   return biton32(default_layer_state) == layer;
 }
 
 bool is_dvorak_mode(void) {
   return default_layer_state_is(_DVORAK);
-}
-
-typedef struct pressed_memo {
-  bool shift;
-  bool adjust;
-} pressed_memo;
-pressed_memo is_pressed = {false, false};
-
-void auto_switch_layer(void) {
-  // turn on ADJUST with
-  if (is_pressed.adjust || // ADJUST
-      (layer_state_is(_LOWER) && layer_state_is(_RAISE))) // LOWER+RAISE
-    layer_on(_ADJUST);
-  else // turn off ADJUST
-    layer_off(_ADJUST);
-
-  return;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
