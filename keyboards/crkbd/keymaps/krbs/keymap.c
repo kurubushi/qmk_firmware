@@ -24,12 +24,14 @@ extern uint8_t is_master;
 #define _QWERTY 0
 #define _LOWER 3
 #define _RAISE 4
+#define _MOUSE 5
 #define _ADJUST 16
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
   RAISE,
+  MOUSE,
   ADJUST,
   BACKLIT,
   RGBRST
@@ -56,6 +58,7 @@ enum macro_keycodes {
 #define KC_CTLTB CTL_T(KC_TAB)
 #define KC_GUIEI GUI_T(KC_LANG2)
 #define KC_ALTKN ALT_T(KC_LANG1)
+#define KC_MOUSE MOUSE
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc( \
@@ -64,7 +67,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LCTL,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
+       LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH, MOUSE,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    LALT,  LGUI,   SPC,      ENT, LOWER, RAISE \
                               //`--------------------'  `--------------------'
@@ -76,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       _____,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  BSPC,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      _____,   GRV,  TILD,   EQL,  PLUS, XXXXX,                    ESC,  LCBR,  LBRC,  RBRC,  RCBR,  BSLS,\
+      _____,   GRV,  TILD,   EQL,  PLUS, XXXXX,                    ESC,  LCBR,  LBRC,  RBRC,  RCBR,  RGUI,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                   _____, _____, _____,    _____, _____, _____ \
                               //`--------------------'  `--------------------'
@@ -88,9 +91,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       _____,   F11,   F12, XXXXX, XXXXX, XXXXX,                   LEFT,  DOWN,    UP,  RGHT, XXXXX,   DEL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   HOME,  PGDN,  PGDN,   END, XXXXX,  RGUI,\
+      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   HOME,  PGDN,  PGDN,   END, XXXXX,  RALT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                   _____, _____, _____,    _____, _____, _____ \
+                              //`--------------------'  `--------------------'
+  ),
+
+  [_MOUSE] = LAYOUT_kc( \
+  //,-----------------------------------------.                ,-----------------------------------------.
+      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX,  WH_U,  MS_U,  WH_D, XXXXX, XXXXX,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX,  MS_L,  MS_D,  MS_R, XXXXX, XXXXX,\
+  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
+                                  _____, _____, _____,     BTN1,  BTN2,  BTN3 \
                               //`--------------------'  `--------------------'
   ),
 
@@ -216,6 +231,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
+    case MOUSE:
+        if (record->event.pressed) {
+          layer_on(_MOUSE);
+        } else {
+          layer_off(_MOUSE);
+        }
+        return false;
+        break;
     case ADJUST:
         if (record->event.pressed) {
           layer_on(_ADJUST);
