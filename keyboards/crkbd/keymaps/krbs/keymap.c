@@ -30,6 +30,7 @@ enum custom_keycodes {
   RAISE,
   MOUSE,
   ADJUST,
+  CUSTOM_KEYCODE_END, // END_OF_CUSTOM_KEYCODES
   KC_TL1,
   KC_TL2,
   KC_TL3,
@@ -44,13 +45,21 @@ enum macro_keycodes {
   KC_SAMPLEMACRO,
 };
 
-typedef struct pressed_memo {
-  bool lower;
-  bool raise;
-  bool mouse;
-  bool adjust;
-} pressed_memo;
-pressed_memo is_pressed;
+bool pressed_memo[CUSTOM_KEYCODE_END - SAFE_RANGE];
+bool pressed_memo_is(uint16_t keycode) {
+  if (keycode >= SAFE_RANGE || keycode < CUSTOM_KEYCODE_END)
+    return pressed_memo[keycode - SAFE_RANGE];
+  return false;
+}
+void pressed_memo_set(uint16_t keycode, bool value) {
+  if (keycode >= SAFE_RANGE || keycode < CUSTOM_KEYCODE_END)
+    pressed_memo[keycode - SAFE_RANGE] = value;
+  return;
+}
+void pressed_memo_clear(void) {
+  memset(&pressed_memo, 0, sizeof(pressed_memo));
+  return;
+}
 
 #define KC______ KC_TRNS
 #define KC_XXXXX KC_NO
@@ -190,20 +199,34 @@ void iota_gfx_task_user(void) {
 
 // Setting extra layer
 void toggle_layer(void) {
+  // QWERTY with
+  if (pressed_memo_is(QWERTY)) {
+    layer_clear();
+    default_layer_set(1UL<<_QWERTY);
+    layer_on(_QWERTY);
+  }
+
+  // Colemak with
+  if (pressed_memo_is(COLEMAK)) {
+    layer_clear();
+    default_layer_set(1UL<<_COLEMAK);
+    layer_on(_COLEMAK);
+  }
+
   // LOWER with
-  if (is_pressed.lower) layer_on(_LOWER);
+  if (pressed_memo_is(LOWER)) layer_on(_LOWER);
   else layer_off(_LOWER);
 
   // RAISE with
-  if (is_pressed.raise) layer_on(_RAISE);
+  if (pressed_memo_is(RAISE)) layer_on(_RAISE);
   else layer_off(_RAISE);
 
   // MOUSE with
-  if (is_pressed.mouse) layer_on(_MOUSE);
+  if (pressed_memo_is(MOUSE)) layer_on(_MOUSE);
   else layer_off(_MOUSE);
 
   // ADJUST with
-  if (is_pressed.adjust || // ADJUST
+  if (pressed_memo_is(ADJUST) || // ADJUST
       (layer_state_is(_LOWER) && layer_state_is(_RAISE))) // LOWER+RAISE
     layer_on(_ADJUST);
   else // turn off ADJUST
@@ -235,33 +258,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   
   switch (keycode) {
-    case LOWER:
-      is_pressed.lower = record->event.pressed;
-      toggle_layer();
-      return false;
-    case RAISE:
-      is_pressed.raise = record->event.pressed;
-      toggle_layer();
-      return false;
     case QWERTY:
-      if (record->event.pressed)
-        default_layer_set(1UL<<_QWERTY);
-      return false;
     case COLEMAK:
-      if (record->event.pressed)
-        default_layer_set(1UL<<_COLEMAK);
-      return false;
+    case LOWER:
+    case RAISE:
     case MOUSE:
-      is_pressed.mouse = record->event.pressed;
-      toggle_layer();
-      return false;
     case ADJUST:
-      is_pressed.adjust = record->event.pressed;
+      pressed_memo_set(keycode, record->event.pressed);
       toggle_layer();
       return false;
     case KC_SWT0:
     case KC_SWT1:
-      memset(&is_pressed, 0, sizeof(pressed_memo));
+      pressed_memo_clear();
       thumblist_index = keycode - KC_SWT0;
       return false;
   }
