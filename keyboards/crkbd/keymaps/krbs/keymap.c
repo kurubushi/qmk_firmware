@@ -17,6 +17,7 @@ extern uint8_t is_master;
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 #define _QWERTY 0
+#define _COLEMAK 1
 #define _LOWER 3
 #define _RAISE 4
 #define _MOUSE 5
@@ -24,6 +25,7 @@ extern uint8_t is_master;
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
+  COLEMAK,
   LOWER,
   RAISE,
   MOUSE,
@@ -44,6 +46,8 @@ pressed_memo is_pressed;
 
 #define KC______ KC_TRNS
 #define KC_XXXXX KC_NO
+#define KC_QWERTY QWERTY
+#define KC_CLMAK COLEMAK
 #define KC_LOWER LOWER
 #define KC_RAISE RAISE
 #define KC_MOUSE MOUSE
@@ -58,6 +62,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH, MOUSE,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    LALT,  LGUI,   SPC,      ENT, LOWER, RAISE \
+                              //`--------------------'  `--------------------'
+  ),
+
+  // Modified Colemak by kurubushi
+  [_COLEMAK] = LAYOUT_kc( \
+  //,-----------------------------------------.                ,-----------------------------------------.
+        TAB,     Q,     W,     F,     P,     G,                      K,     L,     U,     Y,  QUOT, MINUS,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+       LCTL,     A,     R,     S,     T,     D,                      H,     N,     E,     I,     O,  SCLN,\
+  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
+       LSFT,     Z,     X,     C,     V,     B,                      J,     M,  COMM,   DOT,  SLSH, MOUSE,\
+  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
+                                  _____, _____, _____,    _____, _____, _____ \
                               //`--------------------'  `--------------------'
   ),
 
@@ -99,7 +116,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
-      XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
+      XXXXX,QWERTY, CLMAK, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
@@ -193,6 +210,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case RAISE:
       is_pressed.raise = record->event.pressed;
       toggle_layer();
+      return false;
+    case QWERTY:
+      if (record->event.pressed)
+        default_layer_set(1UL<<_QWERTY);
+      return false;
+    case COLEMAK:
+      if (record->event.pressed)
+        default_layer_set(1UL<<_COLEMAK);
       return false;
     case MOUSE:
       is_pressed.mouse = record->event.pressed;
