@@ -29,7 +29,15 @@ enum custom_keycodes {
   LOWER,
   RAISE,
   MOUSE,
-  ADJUST
+  ADJUST,
+  KC_TL1,
+  KC_TL2,
+  KC_TL3,
+  KC_TR1,
+  KC_TR2,
+  KC_TR3,
+  KC_SWT0,
+  KC_SWT1
 };
 
 enum macro_keycodes {
@@ -52,6 +60,13 @@ pressed_memo is_pressed;
 #define KC_RAISE RAISE
 #define KC_MOUSE MOUSE
 
+uint16_t thumblist_index = 0;
+const uint16_t thumblist[][6] =
+  {
+   {KC_LALT, KC_LGUI, KC_SPC,      KC_ENT, LOWER, RAISE},
+   {KC_LGUI, RAISE,   KC_SPC,      KC_ENT, LOWER, KC_LALT}
+  };
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
@@ -61,7 +76,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH, MOUSE,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LALT,  LGUI,   SPC,      ENT, LOWER, RAISE \
+                                    TL1,   TL2,   TL3,      TR1,   TR2,   TR3 \
                               //`--------------------'  `--------------------'
   ),
 
@@ -116,7 +131,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
-      XXXXX,QWERTY, CLMAK, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
+      XXXXX,QWERTY, CLMAK, XXXXX, XXXXX, XXXXX,                   SWT0,  SWT1, XXXXX, XXXXX, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
@@ -196,12 +211,29 @@ void toggle_layer(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case KC_TL1:
+    case KC_TL2:
+    case KC_TL3:
+    case KC_TR1:
+    case KC_TR2:
+    case KC_TR3:
+      keycode = thumblist[thumblist_index][keycode - KC_TL1];
+      // return process_record_user(keycode, record); // doesn't send keycode
+      if (keycode < SAFE_RANGE) {
+        if (record->event.pressed)
+          register_code(keycode);
+        else
+          unregister_code(keycode);
+      }
+  }
+
   if (record->event.pressed) {
 #ifdef SSD1306OLED
     set_keylog(keycode, record);
 #endif
   }
-
+  
   switch (keycode) {
     case LOWER:
       is_pressed.lower = record->event.pressed;
@@ -226,6 +258,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case ADJUST:
       is_pressed.adjust = record->event.pressed;
       toggle_layer();
+      return false;
+    case KC_SWT0:
+    case KC_SWT1:
+      memset(&is_pressed, 0, sizeof(pressed_memo));
+      thumblist_index = keycode - KC_SWT0;
       return false;
   }
   return true;
