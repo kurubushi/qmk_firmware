@@ -31,12 +31,13 @@ enum custom_keycodes {
   MOUSE,
   ADJUST,
   CUSTOM_KEYCODE_END, // END_OF_CUSTOM_KEYCODES
-  KC_TL1,
-  KC_TL2,
-  KC_TL3,
-  KC_TR1,
-  KC_TR2,
-  KC_TR3,
+  KC_KEY1,
+  KC_KEY2,
+  KC_KEY3,
+  KC_KEY4,
+  KC_KEY5,
+  KC_KEY6,
+  KC_KEY7,
   KC_SWT0,
   KC_SWT1
 };
@@ -70,10 +71,10 @@ void pressed_memo_clear(void) {
 #define KC_MOUSE MOUSE
 
 uint16_t thumblist_index = 0;
-const uint16_t thumblist[][6] =
+const uint16_t thumblist[][7] =
   {
-   {KC_LALT, KC_LGUI, KC_SPC,      KC_ENT, LOWER, RAISE},
-   {KC_LGUI, RAISE,   KC_SPC,      KC_ENT, LOWER, KC_LALT}
+   {KC_LGUI, KC_LALT, KC_LSFT, KC_SPC, KC_ENT, LOWER, RAISE},
+   {KC_LGUI, KC_LALT, LOWER, KC_SPC, KC_LSFT, RAISE, KC_ESC}
   };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -83,9 +84,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
        LCTL,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH, MOUSE,\
+       KEY1,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH, MOUSE,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                    TL1,   TL2,   TL3,      TR1,   TR2,   TR3 \
+                                   KEY2,  KEY3,  KEY4,     KEY5,  KEY6,  KEY7 \
                               //`--------------------'  `--------------------'
   ),
 
@@ -235,13 +236,14 @@ void toggle_layer(void) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case KC_TL1:
-    case KC_TL2:
-    case KC_TL3:
-    case KC_TR1:
-    case KC_TR2:
-    case KC_TR3:
-      keycode = thumblist[thumblist_index][keycode - KC_TL1];
+    case KC_KEY1:
+    case KC_KEY2:
+    case KC_KEY3:
+    case KC_KEY4:
+    case KC_KEY5:
+    case KC_KEY6:
+    case KC_KEY7:
+      keycode = thumblist[thumblist_index][keycode - KC_KEY1];
       // return process_record_user(keycode, record); // doesn't send keycode
       if (keycode < SAFE_RANGE) {
         if (record->event.pressed)
