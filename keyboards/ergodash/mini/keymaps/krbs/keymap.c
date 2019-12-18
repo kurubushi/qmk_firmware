@@ -4,6 +4,7 @@
 extern keymap_config_t keymap_config;
 
 #define _QWERTY 0
+#define _CLMAK 1
 #define _LOWER 3
 #define _RAISE 4
 #define _MOUSE 5
@@ -11,6 +12,7 @@ extern keymap_config_t keymap_config;
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
+  CLMAK,
   LOWER,
   RAISE,
   MOUSE,
@@ -41,6 +43,8 @@ void pressed_memo_clear(void) {
 #define KC_LOWER LOWER
 #define KC_RAISE RAISE
 #define KC_INIT INIT
+#define KC_CLMAK CLMAK
+#define KC_QWERTY QWERTY
 
 #define LAYOUT_mini( \
     L00, L01, L02, L03, L04, L05, L06, R00, R01, R02, R03, R04, R05, R06, \
@@ -60,11 +64,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,------------------------------------------------.         ,------------------------------------------------.
         TAB,     Q,     W,     E,     R,     T, XXXXX,           XXXXX,     Y,     U,     I,     O,     P, MINUS, \
   //|------+------+------+------+------+------+------|         |------+------+------+------+------+------+------|
-       LCTL,     A,     S,     D,     F,     G, XXXXX,           XXXXX,     H,     J,     K,     L,  SCLN,  QUOT, \
+       LCTL,     A,     S,     D,     F,     G, XXXXX,           XXXXX,     H,     J,     K,     L,  SCLN,   ENT, \
   //|------+------+------+------+------+------+------'         `------+------+------+------+------+------+------|
-       LALT,     Z,     X,     C,     V,     B,                             N,     M,  COMM,   DOT,  SLSH, MOUSE, \
+       LGUI,     Z,     X,     C,     V,     B,                             N,     M,  COMM,   DOT,  SLSH,  LALT, \
   //|------+------+------+------+------+------+------.         ,------+------+------+------+------+------+------|
-      XXXXX, XXXXX, XXXXX,         LGUI,  LSFT,   SPC,             ENT, LOWER, RAISE,        XXXXX, XXXXX, XXXXX \
+      XXXXX, XXXXX, XXXXX,        XXXXX,  LSFT,   SPC,           RAISE, LOWER, MOUSE,        XXXXX, XXXXX, XXXXX \
+  //`--------------------'      `--------------------'         `--------------------'      `--------------------'
+  ),
+
+  [_CLMAK] = LAYOUT_mini( \
+  //,------------------------------------------------.         ,------------------------------------------------.
+        TAB,     Q,     W,     F,     P,     G, XXXXX,           XXXXX,     J,     L,     U,     Y,  SCLN, MINUS, \
+  //|------+------+------+------+------+------+------|         |------+------+------+------+------+------+------|
+       LCTL,     A,     R,     S,     T,     D, XXXXX,           XXXXX,     H,     N,     E,     I,     O,   ENT, \
+  //|------+------+------+------+------+------+------'         `------+------+------+------+------+------+------|
+       LGUI,     Z,     X,     C,     V,     B,                             K,     M,  COMM,   DOT,  SLSH,  LALT, \
+  //|------+------+------+------+------+------+------.         ,------+------+------+------+------+------+------|
+      XXXXX, XXXXX, XXXXX,        XXXXX,  LSFT,   SPC,           RAISE, LOWER, MOUSE,        XXXXX, XXXXX, XXXXX \
   //`--------------------'      `--------------------'         `--------------------'      `--------------------'
   ),
 
@@ -72,9 +88,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,------------------------------------------------.         ,------------------------------------------------.
       _____,     1,     2,     3,     4,     5, _____,           _____,     6,     7,     8,     9,     0,  PIPE, \
   //|------+------+------+------+------+------+------|         |------+------+------+------+------+------+------|
-      _____,  EXLM,    AT,  HASH,   DLR,  PERC, _____,           _____,  CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  BSPC, \
+      _____,  EXLM,    AT,  HASH,   DLR,  PERC, _____,           _____,  CIRC,  AMPR,  ASTR,  LPRN,  RPRN,   EQL, \
   //|------+------+------+------+------+------+------'         `------+------+------+------+------+------+------|
-      _____,   GRV,  TILD,   EQL,  PLUS, XXXXX,                           ESC,  LCBR,  LBRC,  RBRC,  RCBR,  BSLS, \
+      _____,   GRV,  QUOT,  DQUO,  TILD, XXXXX,                          PLUS,  LCBR,  LBRC,  RBRC,  RCBR,  BSLS, \
   //|------+------+------+------+------+------+------.         ,------+------+------+------+------+------+------|
       _____, _____, _____,        _____, _____, _____,           _____, _____, _____,        _____, _____, _____ \
   //`--------------------'      `--------------------'         `--------------------'      `--------------------'
@@ -82,11 +98,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_RAISE] = LAYOUT_mini( \
   //,------------------------------------------------.         ,------------------------------------------------.
-      _____,    F1,    F2,    F3,    F4,    F5, _____,           _____,    F6,    F7,    F8,    F9,   F10,  CAPS, \
+      _____,    F1,    F2,    F3,    F4,    F5, _____,           _____,    F6,    F7,    F8,    F9,   F10,   DEL, \
   //|------+------+------+------+------+------+------|         |------+------+------+------+------+------+------|
-      _____,   F11,   F12, XXXXX, XXXXX, XXXXX, _____,           _____,  LEFT,  DOWN,    UP,  RGHT, XXXXX,   DEL, \
+      _____,   F11,   F12, XXXXX, XXXXX, XXXXX, _____,           _____,  LEFT,  DOWN,    UP,  RGHT,   ESC,  BSPC, \
   //|------+------+------+------+------+------+------'         `------+------+------+------+------+------+------|
-      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                          HOME,  PGDN,  PGUP,   END, XXXXX,  RGUI, \
+      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                          HOME,  PGDN,  PGUP,   END,  CAPS,  RGUI, \
   //|------+------+------+------+------+------+------.         ,------+------+------+------+------+------+------|
       _____, _____, _____,        _____, _____, _____,           _____, _____, _____,        _____, _____, _____ \
   //`--------------------'      `--------------------'         `--------------------'      `--------------------'
@@ -94,19 +110,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_MOUSE] = LAYOUT_mini( \
   //,------------------------------------------------.         ,------------------------------------------------.
-      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, _____,           _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, \
+      _____, XXXXX,  WH_U,  MS_U,  WH_D, XXXXX, _____,           _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, \
   //|------+------+------+------+------+------+------|         |------+------+------+------+------+------+------|
-      _____,   F11,   F12, XXXXX, XXXXX, XXXXX, _____,           _____, XXXXX,  WH_U,  MS_U,  WH_D, XXXXX, XXXXX, \
+      _____, XXXXX,  MS_L,  MS_D,  MS_R, XXXXX, _____,           _____, XXXXX,  BTN1,  BTN3,  BTN2, XXXXX, XXXXX, \
   //|------+------+------+------+------+------+------'         `------+------+------+------+------+------+------|
       _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                         XXXXX,  MS_L,  MS_D,  MS_R, XXXXX, XXXXX, \
   //|------+------+------+------+------+------+------.         ,------+------+------+------+------+------+------|
-      _____, _____, _____,        _____, _____, _____,            BTN1,  BTN3,  BTN2,        _____, _____, _____ \
+      _____, _____, _____,        _____, _____, _____,           _____, _____, _____,        _____, _____, _____ \
   //`--------------------'      `--------------------'         `--------------------'      `--------------------'
   ),
 
   [_ADJUST] = LAYOUT_mini( \
   //,------------------------------------------------.         ,------------------------------------------------.
-      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, _____,           _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, \
+      _____,QWERTY, CLMAK, XXXXX, XXXXX, XXXXX, _____,           _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, \
   //|------+------+------+------+------+------+------|         |------+------+------+------+------+------+------|
       _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,  INIT,           _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, \
   //|------+------+------+------+------+------+------'         `------+------+------+------+------+------+------|
@@ -124,6 +140,13 @@ void toggle_layer(void) {
     layer_clear();
     default_layer_set(1UL<<_QWERTY);
     layer_on(_QWERTY);
+  }
+
+  // CLMAK with
+  if (pressed_memo_is(CLMAK)) {
+    layer_clear();
+    default_layer_set(1UL<<_CLMAK);
+    layer_on(_CLMAK);
   }
 
   // LOWER with
@@ -154,6 +177,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     case QWERTY:
+    case CLMAK:
     case LOWER:
     case RAISE:
     case MOUSE:
