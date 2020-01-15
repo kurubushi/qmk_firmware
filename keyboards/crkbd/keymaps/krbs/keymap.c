@@ -73,7 +73,7 @@ void pressed_memo_clear(void) {
 uint16_t thumblist_index = 0;
 const uint16_t thumblist[][7] =
   {
-   {KC_LGUI, KC_LALT, KC_LSFT, KC_SPC, KC_ENT, LOWER, RAISE},
+   {KC_LGUI, KC_LALT, KC_LSFT, KC_SPC, RAISE, LOWER, MOUSE},
    {KC_LGUI, KC_LALT, LOWER, KC_SPC, KC_LSFT, RAISE, KC_ESC}
   };
 
@@ -82,9 +82,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
         TAB,     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P, MINUS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LCTL,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
+       LCTL,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,   ENT,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       KEY1,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH, MOUSE,\
+       KEY1,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  LALT,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                    KEY2,  KEY3,  KEY4,     KEY5,  KEY6,  KEY7 \
                               //`--------------------'  `--------------------'
@@ -107,9 +107,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
       _____,     1,     2,     3,     4,     5,                      6,     7,     8,     9,     0,  PIPE,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      _____,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  BSPC,\
+      _____,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,   EQL,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      _____,   GRV,  TILD,   EQL,  PLUS, XXXXX,                    ESC,  LCBR,  LBRC,  RBRC,  RCBR,  BSLS,\
+      _____,   GRV,  QUOT,  DQUO,  TILD,  PLUS,                   PLUS,  LCBR,  LBRC,  RBRC,  RCBR,  BSLS,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                   _____, _____, _____,    _____, _____, _____ \
                               //`--------------------'  `--------------------'
@@ -119,9 +119,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------.                ,-----------------------------------------.
       _____,    F1,    F2,    F3,    F4,   F5,                      F6,    F7,    F8,    F9,   F10,  CAPS,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      _____,   F11,   F12, XXXXX, XXXXX, XXXXX,                   LEFT,  DOWN,    UP,  RGHT, XXXXX,   DEL,\
+      _____,   F11,   F12, XXXXX, XXXXX, XXXXX,                   LEFT,  DOWN,    UP,  RGHT,   ESC,  BSPC,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   HOME,  PGDN,  PGDN,   END, XXXXX,  RGUI,\
+      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   HOME,  PGDN,  PGDN,   END,  CAPS,  RGUI,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
                                   _____, _____, _____,    _____, _____, _____ \
                               //`--------------------'  `--------------------'
@@ -129,13 +129,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_MOUSE] = LAYOUT_kc( \
   //,-----------------------------------------.                ,-----------------------------------------.
-      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
+      _____, XXXXX,  WH_U,  MS_U,  WH_D, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX,  WH_U,  MS_U,  WH_D, XXXXX, XXXXX,\
+      _____, XXXXX,  MS_L,  MS_D,  MS_R, XXXXX,                  XXXXX,  BTN1,  BTN3,  BTN2, XXXXX, XXXXX,\
   //|------+------+------+------+------+------|                |------+------+------+------+------+------|
       _____, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX,  MS_L,  MS_D,  MS_R, XXXXX, XXXXX,\
   //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                  _____, _____, _____,     BTN1,  BTN3,  BTN2 \
+                                  _____, _____, _____,    _____, _____, _____ \
                               //`--------------------'  `--------------------'
   ),
 
