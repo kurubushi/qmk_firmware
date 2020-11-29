@@ -17,6 +17,14 @@
 
 #pragma once
 
+#undef VENDOR_ID
+#define VENDOR_ID       0x3297
+#undef PRODUCT_ID
+#define PRODUCT_ID      0xC6CE
+#undef MANUFACTURER
+#define MANUFACTURER    ZSA Technology Labs
+#undef PRODUCT
+#define PRODUCT         Planck EZ
 /* USB Device descriptor parameter */
 #define DEVICE_VER 0x0000
 
@@ -138,3 +146,19 @@
 #define DRIVER_LED_TOTAL DRIVER_1_LED_TOTAL
 
 #define RGB_MATRIX_KEYPRESSES
+#define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+#define RGB_DISABLE_WHEN_USB_SUSPENDED true
+
+#define RGB_MATRIX_LED_PROCESS_LIMIT 5
+#define RGB_MATRIX_LED_FLUSH_LIMIT 26
+
+
+#define IGNORE_MOD_TAP_INTERRUPT
+
+#define TAPPING_TOGGLE  1
+
+#define MOUSEKEY_INTERVAL       20
+#define MOUSEKEY_DELAY          0
+#define MOUSEKEY_TIME_TO_MAX    60
+#define MOUSEKEY_MAX_SPEED      7
+#define MOUSEKEY_WHEEL_DELAY 0
